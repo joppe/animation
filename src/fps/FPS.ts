@@ -1,39 +1,30 @@
 /**
  * This class calculates the number of frames thar are rendered per second.
+ *
+ * @see https://www.growingwiththeweb.com/2017/12/fast-simple-js-fps-counter.html
  */
 export class FPS {
-    private _frames: number = 0;
+    private _frames: Array<number> = [];
 
-    private _fps: number = 0;
+    public count(): number {
+        const now: number = this.now();
+        const from: number = now - 1000;
 
-    private _time: number;
+        while (
+            this._frames.length > 0 &&
+            this._frames[0] < from
+        ) {
+            this._frames.shift();
+        }
 
-    get fps(): number {
-        return this._fps;
-    }
-
-    constructor() {
-        this._time = this.now();
+        return this._frames.length;
     }
 
     /**
      * Call this function to indicate that a new frame is rendered.
      */
     public tick(): void {
-        const now: number = this.now();
-
-        // The duration is in seconds
-        const duration: number = (now - this._time) / 1000;
-
-        this._frames += 1;
-        this._fps = this._frames / duration;
-
-        // If the duration is larger then one second, reset the duration and frame count.
-        // This way the fps is calculated over a period of one second.
-        if (duration > 1) {
-            this._frames = 0;
-            this._time = now;
-        }
+        this._frames.push(this.now());
     }
 
     private now(): number {
