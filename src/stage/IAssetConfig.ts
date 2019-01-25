@@ -1,4 +1,8 @@
-import { IAsset } from 'app/animation/stage/IAsset';
+import { IAsset } from './IAsset';
+
+/**
+ * Configuration for adding an Asset to a Layer
+ */
 
 export interface IAssetConfig {
     asset: IAsset;

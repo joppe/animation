@@ -40,5 +40,8 @@
   "files": [
     "dist"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "@apestaartje/dom": "^1.1.0",
+    "@apestaartje/geometry": "^1.2.2"
+  }
 }

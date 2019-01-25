@@ -1,10 +1,14 @@
+/**
+ * This animator uses the RAF of the browser
+ */
+
 export class Animator {
     private _id: number;
-    private _wrapper: (time: number) => void;
+    private readonly _wrapper: (time: number) => void;
 
     constructor(animation: Function) {
         this._wrapper = (time: number): void => {
-            if (animation()) {
+            if (animation(time)) {
                 this._id = window.requestAnimationFrame(this._wrapper);
             }
         };

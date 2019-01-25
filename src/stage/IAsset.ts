@@ -1,5 +1,8 @@
+/**
+ * An Asset that can be rendered on a Canvas element
+ */
 export interface IAsset {
-    render(context: CanvasRenderingContext2D): void;
-
     cleanup(): boolean;
+
+    render(context: CanvasRenderingContext2D): void;
 }

@@ -1,12 +1,16 @@
 import * as geometry from '@apestaartje/geometry';
 
-import { ILayerConfig } from 'app/animation/stage/ILayerConfig';
-import { Layer } from 'app/animation/stage/Layer';
+import { ILayerConfig } from './ILayerConfig';
+import { Layer } from './Layer';
+
+/**
+ * The main Stage
+ */
 
 export class Stage {
-    private _container: HTMLElement;
+    private readonly _container: HTMLElement;
     private _layerConfigs: Array<ILayerConfig> = [];
-    private _size: geometry.size.Size;
+    private readonly _size: geometry.size.Size;
 
     constructor(root: HTMLElement, size: geometry.size.Size) {
         this._size = size;
@@ -14,13 +18,14 @@ export class Stage {
         this._container = window.document.createElement('div');
         this._container.style.width = `${this._size.width}px`;
         this._container.style.height = `${this._size.height}px`;
-        this._container.classList.add('c-stage');
+        this._container.style.position = 'relative';
+
         root.appendChild(this._container);
 
-        this.addLayer('root', 0);
+        this.createLayer('root', 0);
     }
 
-    public addLayer(id: string, depth: number): Layer {
+    public createLayer(id: string, depth: number): Layer {
         const layer: Layer = new Layer(this._container, this._size);
         const layerConfigs: Array<ILayerConfig> = this._layerConfigs.concat({
             depth,

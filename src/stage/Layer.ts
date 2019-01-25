@@ -1,18 +1,25 @@
+import * as dom from '@apestaartje/dom';
 import * as geometry from '@apestaartje/geometry';
 
-import { IAsset } from 'app/animation/stage/IAsset';
-import { IAssetConfig } from 'app/animation/stage/IAssetConfig';
-import { Canvas } from 'app/dom/element/Canvas';
+import { IAsset } from './IAsset';
+import { IAssetConfig } from './IAssetConfig';
+
+/**
+ * A animatable layer
+ */
 
 export class Layer {
     private _assetConfigs: Array<IAssetConfig> = [];
-    private _canvas: Canvas;
+    private _canvas: dom.element.Canvas;
     private _isFrozen: boolean = false;
     private _isRendered: boolean = false;
 
     constructor(container: HTMLElement, size: geometry.size.Size) {
-        this._canvas = new Canvas(size);
-        this._canvas.classList.add('c-layer');
+        this._canvas = new dom.element.Canvas(size);
+        this._canvas.style.position = 'absolute';
+        this._canvas.style.left = '0';
+        this._canvas.style.top = '0';
+        this._canvas.style.backgroundColor = 'transparent';
         this._canvas.appendTo(container);
     }
 
