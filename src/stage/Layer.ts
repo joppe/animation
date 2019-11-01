@@ -1,18 +1,23 @@
 import * as dom from '@apestaartje/dom';
 import * as geometry from '@apestaartje/geometry';
 
-import { IAsset } from './IAsset';
-import { IAssetConfig } from './IAssetConfig';
+import { Asset } from './Asset';
+import { AssetConfig } from './AssetConfig';
+import { Chronometer } from '../animator';
 
 /**
  * A animatable layer
  */
 
 export class Layer {
-    private _assetConfigs: Array<IAssetConfig> = [];
-    private _canvas: dom.element.Canvas;
+    private _assetConfigs: AssetConfig[] = [];
+    private readonly _canvas: dom.element.Canvas;
     private _isFrozen: boolean = false;
     private _isRendered: boolean = false;
+
+    set color(color: string) {
+        this._canvas.style.backgroundColor = color;
+    }
 
     constructor(container: HTMLElement, size: geometry.size.Size) {
         this._canvas = new dom.element.Canvas(size);
@@ -23,14 +28,14 @@ export class Layer {
         this._canvas.appendTo(container);
     }
 
-    public addAsset(asset: IAsset, id: string, depth: number): void {
-        const assetConfigs: Array<IAssetConfig> = this._assetConfigs.concat({
+    public addAsset(asset: Asset, id: string, depth: number): void {
+        const assetConfigs: AssetConfig[] = this._assetConfigs.concat({
             asset,
             depth,
-            id
+            id,
         });
 
-        assetConfigs.sort((a: IAssetConfig, b: IAssetConfig): number => {
+        assetConfigs.sort((a: AssetConfig, b: AssetConfig): number => {
             if (a.depth < b.depth) {
                 return -1;
             }
@@ -46,13 +51,13 @@ export class Layer {
     }
 
     public removeAsset(id: string): void {
-        this._assetConfigs = this._assetConfigs.filter((assetConfig: IAssetConfig): boolean => {
+        this._assetConfigs = this._assetConfigs.filter((assetConfig: AssetConfig): boolean => {
             return assetConfig.id !== id;
         });
     }
 
-    public getAsset(id: string): IAsset {
-        const assetConfig: IAssetConfig | undefined = this._assetConfigs.find((config: IAssetConfig): boolean => {
+    public getAsset(id: string): Asset {
+        const assetConfig: AssetConfig | undefined = this._assetConfigs.find((config: AssetConfig): boolean => {
             return config.id === id;
         });
 
@@ -63,15 +68,17 @@ export class Layer {
         return assetConfig.asset;
     }
 
-    public render(): void {
+    public render(time: Chronometer): void {
         if (this._isFrozen && this._isRendered) {
             return;
         }
 
         this._canvas.clear();
 
-        this._assetConfigs.forEach((assetConfig: IAssetConfig): void => {
-            assetConfig.asset.render(this._canvas.context);
+        this._assetConfigs.forEach((assetConfig: AssetConfig): void => {
+            this._canvas.context.save();
+            assetConfig.asset.render(time, this._canvas.context);
+            this._canvas.context.restore();
         });
 
         this._isRendered = true;
