@@ -30,7 +30,7 @@ export class Animator {
             this._chronometer.current = time;
             this._chronometer.elapsed = time - this._chronometer.start;
 
-            if (animation(this._chronometer)) {
+            if (this._isPlaying && animation(this._chronometer)) {
                 this._id = window.requestAnimationFrame(this._wrapper);
             }
         };
