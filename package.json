@@ -1,6 +1,6 @@
 {
   "name": "@apestaartje/animation",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "An animation library",
   "scripts": {
     "build": "npm run clean && node ./node_modules/.bin/tsc",
